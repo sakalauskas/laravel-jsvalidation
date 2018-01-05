@@ -96,10 +96,7 @@ laravelValidation = {
                 if (laravelValidation.methods[rule]!==undefined) {
                     validated = laravelValidation.methods[rule].call(validator, value, element, param[1], function(valid) {
                         validator.settings.messages[ element.name ].laravelValidationRemote = previous.originalMessage;
-                        console.log(rule, valid);
-                        if (rule == "SoftWarning") {
-                            console.log('valididity', valid)
-                        }
+
                         if ( valid ) {
                             var submitted = validator.formSubmitted;
                             validator.prepareElement( element );

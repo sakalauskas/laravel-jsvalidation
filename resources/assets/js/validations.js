@@ -55,8 +55,6 @@ $.extend(true, laravelValidation, {
                 return this.checked;
             }).length;
 
-            console.log('min', length)
-
             self.trackers[element.name] = 1;
 
             return length >= param;
