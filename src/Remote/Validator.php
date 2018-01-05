@@ -8,7 +8,6 @@ use Illuminate\Validation\ValidationRuleParser;
 use Proengsoft\JsValidation\Support\RuleListTrait;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Validator as BaseValidator;
-use Illuminate\Validation\ValidationRuleParser;
 use Proengsoft\JsValidation\Support\AccessProtectedTrait;
 
 /**

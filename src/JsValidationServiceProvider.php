@@ -4,6 +4,7 @@ namespace Proengsoft\JsValidation;
 
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Validator;
 use Proengsoft\JsValidation\Javascript\ValidatorHandler;
 
 class JsValidationServiceProvider extends ServiceProvider
@@ -17,10 +18,12 @@ class JsValidationServiceProvider extends ServiceProvider
         $this->bootstrapViews();
         $this->bootstrapValidator();
         $this->publishAssets();
+        $this->app[Kernel::class]->pushMiddleware(RemoteValidationMiddleware::class);
 
-        if ($this->app['config']->get('jsvalidation.disable_remote_validation') === false) {
-            $this->app[Kernel::class]->pushMiddleware(RemoteValidationMiddleware::class);
-        }
+        // custom check on front-end
+        Validator::extend('soft_warning', function ($attribute, $value) {
+            return true;
+        });
     }
 
     /**

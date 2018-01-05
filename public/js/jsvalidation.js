@@ -2449,7 +2449,7 @@ var DateFormatter;
 var laravelValidation;
 laravelValidation = {
 
-    implicitRules: ['Required','Confirmed'],
+    implicitRules: ['Required', 'Confirmed', 'SoftWarning', 'RequiredMin', 'RequiredMax'],
 
     /**
      * Initialize laravel validations.
@@ -2464,6 +2464,7 @@ laravelValidation = {
 
         $.validator.dataRules = this.arrayRules;
         $.validator.prototype.arrayRulesCache = {};
+        $.validator.prototype.softWarnings = {};
         // Register validations methods
         this.setupValidations();
     },
@@ -2534,6 +2535,10 @@ laravelValidation = {
                 if (laravelValidation.methods[rule]!==undefined) {
                     validated = laravelValidation.methods[rule].call(validator, value, element, param[1], function(valid) {
                         validator.settings.messages[ element.name ].laravelValidationRemote = previous.originalMessage;
+                        console.log(rule, valid);
+                        if (rule == "SoftWarning") {
+                            console.log('valididity', valid)
+                        }
                         if ( valid ) {
                             var submitted = validator.formSubmitted;
                             validator.prepareElement( element );
@@ -2577,7 +2582,7 @@ laravelValidation = {
                 check = params[0][1],
                 attribute = element.name,
                 token = check[1],
-                validateAll = check[2];
+                validateAll = true; //   check[2];
 
             $.each(params, function (i, parameters) {
                 implicit = implicit || parameters[3];
@@ -3514,7 +3519,75 @@ $.extend(true, laravelValidation, {
 
         helpers: laravelValidation.helpers,
 
+        trackers: {},
+
         jsRemoteTimer:0,
+
+        /**
+         * The field under validation must be a successfully uploaded file.
+         *
+         * @return {boolean}
+         */
+        SoftWarning: function(value, element) {
+            var filled = $.validator.methods.required.call(this, value, element);
+            if (!filled && $.validator.prototype.softWarnings[element.name] === undefined) {
+                $.validator.prototype.softWarnings [element.name] = 0;
+                return false;
+            } else if ($.validator.prototype.softWarnings[element.name] === 0) {
+                $.validator.prototype.softWarnings [element.name] = 1;
+                // valid now.
+            }
+            return true;
+        },
+
+        RequiredMin: function(value, element, params) {
+            var param = params[0];
+            var self = this;
+            // initialize it first if we do not have it
+            if (self.trackers == undefined) {
+                self.trackers = {};
+            }
+
+            var length = $(element).closest('.question-check-group').find('.checkbox-group input[type="checkbox"]').filter(function(el) {
+
+                if (self.trackers[element.name] == undefined) {
+                    $(this).on('click', function() {
+                        self.element(element)
+                    });
+                }
+
+                return this.checked;
+            }).length;
+
+            console.log('min', length)
+
+            self.trackers[element.name] = 1;
+
+            return length >= param;
+        },
+
+        RequiredMax: function(value, element, params) {
+            var param = params[0];
+            var self = this;
+            // initialize it first if we do not have it
+            if (self.trackers == undefined) {
+                self.trackers = {};
+            }
+
+            var length = $(element).closest('.question-check-group').find('.checkbox-group input[type="checkbox"]').filter(function(el) {
+                if (self.trackers[element.name] == undefined) {
+                    $(this).on('click', function() {
+                        self.element(element)
+                    });
+                }
+
+                return this.checked;
+            }).length;
+
+            self.trackers[element.name] = 1;
+
+            return length <= param;
+        },
 
         /**
          * "Validate" optional attributes.

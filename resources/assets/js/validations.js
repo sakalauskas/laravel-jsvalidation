@@ -15,7 +15,75 @@ $.extend(true, laravelValidation, {
 
         helpers: laravelValidation.helpers,
 
+        trackers: {},
+
         jsRemoteTimer:0,
+
+        /**
+         * The field under validation must be a successfully uploaded file.
+         *
+         * @return {boolean}
+         */
+        SoftWarning: function(value, element) {
+            var filled = $.validator.methods.required.call(this, value, element);
+            if (!filled && $.validator.prototype.softWarnings[element.name] === undefined) {
+                $.validator.prototype.softWarnings [element.name] = 0;
+                return false;
+            } else if ($.validator.prototype.softWarnings[element.name] === 0) {
+                $.validator.prototype.softWarnings [element.name] = 1;
+                // valid now.
+            }
+            return true;
+        },
+
+        RequiredMin: function(value, element, params) {
+            var param = params[0];
+            var self = this;
+            // initialize it first if we do not have it
+            if (self.trackers == undefined) {
+                self.trackers = {};
+            }
+
+            var length = $(element).closest('.question-check-group').find('.checkbox-group input[type="checkbox"]').filter(function(el) {
+
+                if (self.trackers[element.name] == undefined) {
+                    $(this).on('click', function() {
+                        self.element(element)
+                    });
+                }
+
+                return this.checked;
+            }).length;
+
+            console.log('min', length)
+
+            self.trackers[element.name] = 1;
+
+            return length >= param;
+        },
+
+        RequiredMax: function(value, element, params) {
+            var param = params[0];
+            var self = this;
+            // initialize it first if we do not have it
+            if (self.trackers == undefined) {
+                self.trackers = {};
+            }
+
+            var length = $(element).closest('.question-check-group').find('.checkbox-group input[type="checkbox"]').filter(function(el) {
+                if (self.trackers[element.name] == undefined) {
+                    $(this).on('click', function() {
+                        self.element(element)
+                    });
+                }
+
+                return this.checked;
+            }).length;
+
+            self.trackers[element.name] = 1;
+
+            return length <= param;
+        },
 
         /**
          * "Validate" optional attributes.

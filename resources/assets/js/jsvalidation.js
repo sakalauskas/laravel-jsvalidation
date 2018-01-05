@@ -10,7 +10,7 @@
 var laravelValidation;
 laravelValidation = {
 
-    implicitRules: ['Required','Confirmed'],
+    implicitRules: ['Required', 'Confirmed', 'SoftWarning', 'RequiredMin', 'RequiredMax'],
 
     /**
      * Initialize laravel validations.
@@ -25,6 +25,7 @@ laravelValidation = {
 
         $.validator.dataRules = this.arrayRules;
         $.validator.prototype.arrayRulesCache = {};
+        $.validator.prototype.softWarnings = {};
         // Register validations methods
         this.setupValidations();
     },
@@ -95,6 +96,10 @@ laravelValidation = {
                 if (laravelValidation.methods[rule]!==undefined) {
                     validated = laravelValidation.methods[rule].call(validator, value, element, param[1], function(valid) {
                         validator.settings.messages[ element.name ].laravelValidationRemote = previous.originalMessage;
+                        console.log(rule, valid);
+                        if (rule == "SoftWarning") {
+                            console.log('valididity', valid)
+                        }
                         if ( valid ) {
                             var submitted = validator.formSubmitted;
                             validator.prepareElement( element );
@@ -138,7 +143,7 @@ laravelValidation = {
                 check = params[0][1],
                 attribute = element.name,
                 token = check[1],
-                validateAll = check[2];
+                validateAll = true; //   check[2];
 
             $.each(params, function (i, parameters) {
                 implicit = implicit || parameters[3];
