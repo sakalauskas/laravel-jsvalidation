@@ -41,6 +41,6 @@ elixir(function(mix) {
 
     mix.copy(
         'public/js/jsvalidation'+minSuffix+'.js',
-        '/Users/laurynassakalauskas/Code/Qualia/public/vendor/jsvalidation/js/jsvalidation'+minSuffix+'.js'
+        '/Users/laurynas/Code/Qualia-Survey-System/public/vendor/jsvalidation/js/jsvalidation'+minSuffix+'.js'
     );
 });

@@ -2803,7 +2803,7 @@ $.extend(true, laravelValidation, {
          * @param string
          */
         strlen: function (string) {
-            return strlen(string);
+            return typeof string === "string" ? string.length : 0; // strlen(string);
         },
 
         /**
