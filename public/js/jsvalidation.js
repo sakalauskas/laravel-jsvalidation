@@ -2940,13 +2940,19 @@ $.extend(true, laravelValidation, {
          * @param validator
          * @param element
          * @param name
-         * @returns {*}
+         * @returns {*}3
          */
         dependentElement: function(validator, element, name) {
 
-            var el=validator.findByName(name);
+            var el = validator.findByName(name);
 
             if ( el[0]!==undefined  && validator.settings.onfocusout ) {
+                // when we have checkboxes, we have one hidden field and one checkbox field
+                // if we have element that is hidden we will always check if he have a checked checkbox
+                if (el[0].type === 'hidden' && el.filter( ":checked" ).length === 1) {
+                    el = el.filter( ":checked" );
+                }
+
                 var event = 'blur';
                 if (el[0].tagName === 'SELECT' ||
                     el[0].tagName === 'OPTION' ||
@@ -3752,9 +3758,10 @@ $.extend(true, laravelValidation, {
          */
         RequiredIf: function(value, element, params) {
 
-            var target=laravelValidation.helpers.dependentElement(
+            var target = laravelValidation.helpers.dependentElement(
                 this, element, params[0]
             );
+
 
             if (target!==undefined) {
                 var val=String(this.elementValue(target));

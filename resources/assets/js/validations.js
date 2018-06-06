@@ -251,9 +251,10 @@ $.extend(true, laravelValidation, {
          */
         RequiredIf: function(value, element, params) {
 
-            var target=laravelValidation.helpers.dependentElement(
+            var target = laravelValidation.helpers.dependentElement(
                 this, element, params[0]
             );
+
 
             if (target!==undefined) {
                 var val=String(this.elementValue(target));
