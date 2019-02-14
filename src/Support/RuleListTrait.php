@@ -15,7 +15,7 @@ trait RuleListTrait
         'In', 'InArray', 'Integer', 'Ip', 'Json', 'Max', 'Mimes', 'Mimetypes', 'Min', 'NotIn', 'Nullable',
         'Numeric', 'Regex', 'Required', 'RequiredIf', 'RequiredUnless', 'RequiredWith', 'RequiredWithAll',
         'RequiredWithout', 'RequiredWithoutAll', 'Same', 'Size', 'Sometimes',
-        'String', 'Timezone', 'Url', 'SoftWarning', 'RequiredMin', 'RequiredMax'];
+        'String', 'Timezone', 'Url', 'SoftWarning', 'RequiredMin', 'RequiredMax', 'RequiredAtLeastOne'];
 
     /**
      * Rules validated in Server-Side.
