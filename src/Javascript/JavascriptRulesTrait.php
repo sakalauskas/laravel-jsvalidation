@@ -165,6 +165,21 @@ trait JavascriptRulesTrait
     }
 
     /**
+     * Validate that an attribute exists when another attribute has a given value.
+     *
+     * @param string $attribute
+     * @param mixed $parameters
+     *
+     * @return array
+     */
+    protected function ruleRequiredIfPreferNot($attribute, array $parameters)
+    {
+        $parameters[0] = $this->getAttributeName($parameters[0]);
+
+        return [$attribute, $parameters];
+    }
+    
+    /**
      * Validate that an attribute exists when another attribute does not have a given value.
      *
      * @param string $attribute
